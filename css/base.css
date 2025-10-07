@@ -1,0 +1,107 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
+
+:root{
+  --bg0:#0b0f17; --bg1:#100a1f;
+  --glass:rgba(255,255,255,0.06);
+  --stroke:rgba(255,255,255,0.14);
+  --ink:#e8eef6; --muted:#a9b4c0;
+  --accent:#33a1ff; --accent-2:#7c3aed;
+  --shadow:0 10px 30px rgba(0,0,0,.35);
+  --radius:14px;
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0; font-family:'Inter',system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+  color:var(--ink);
+  background:
+    radial-gradient(1100px 700px at 80% -10%, rgba(124,58,237,.12), transparent 60%),
+    radial-gradient(900px 600px at -10% 80%, rgba(0,229,255,.10), transparent 55%),
+    linear-gradient(180deg,var(--bg0),var(--bg1));
+  overflow:hidden; /* OS vibe */
+}
+
+/* vignette */
+body::after{
+  content:""; position:fixed; inset:0; pointer-events:none;
+  background: radial-gradient(60% 50% at 50% 20%, rgba(0,0,0,0), rgba(0,0,0,.28));
+  z-index:0;
+}
+
+/* grid canvas behind everything */
+#dot-grid{ position:fixed; inset:0; z-index:-1; display:block; }
+
+/* Desktop area where windows live */
+#desktop{
+  position:fixed; inset:0 0 44px 0; /* leave room for taskbar */
+  padding:18px; z-index:1;
+}
+
+/* Window chrome */
+.win{
+  position:absolute; top:120px; left:120px; width:520px; min-width:320px; height:360px;
+  background:rgba(16,18,26,.65);
+  border:1px solid var(--stroke);
+  border-radius:var(--radius);
+  backdrop-filter: blur(10px);
+  box-shadow: var(--shadow);
+  display:flex; flex-direction:column;
+  outline:none;
+}
+.win:focus-within{ box-shadow:0 0 0 2px var(--accent), var(--shadow); }
+
+.win__title{
+  display:flex; align-items:center; gap:10px; padding:10px 12px;
+  border-bottom:1px solid rgba(255,255,255,.08);
+  background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,0));
+  user-select:none; cursor:grab;
+  border-top-left-radius:var(--radius); border-top-right-radius:var(--radius);
+}
+.win__title:active{ cursor:grabbing; }
+.win__title .controls{ margin-left:auto; display:flex; gap:6px; }
+.win__title .ctl{
+  width:12px; height:12px; border-radius:50%;
+  border:1px solid rgba(0,0,0,.25); background:#ff605c; /* close */
+}
+.win__title .ctl.min{ background:#ffbd44; }
+.win__title .ctl.max{ background:#00ca4e; }
+
+.win__label{ font-weight:700; letter-spacing:.2px; }
+
+/* body */
+.win__body{
+  flex:1; overflow:auto; padding:14px;
+}
+
+/* Taskbar */
+#taskbar{
+  position:fixed; left:0; right:0; bottom:0; height:44px; z-index:2;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0 8px;
+  background:rgba(12,14,22,.7); backdrop-filter: blur(8px);
+  border-top:1px solid rgba(255,255,255,.1);
+}
+.taskbar-left{ display:flex; gap:6px; align-items:center; }
+.taskbar-right{ display:flex; gap:8px; align-items:center; }
+.brand{
+  border:none; padding:6px 10px; border-radius:8px; font-weight:800;
+  color:#fff; background: linear-gradient(90deg, var(--accent), var(--accent-2));
+}
+.task-btn{
+  border:1px solid rgba(255,255,255,.14); color:#fff; background:rgba(255,255,255,.04);
+  padding:6px 12px; border-radius:8px; cursor:pointer;
+}
+.task-btn.active{ outline:2px solid var(--accent); outline-offset:0; }
+
+/* Theme toggle + clock */
+#theme-toggle{ border:1px solid rgba(255,255,255,.14); background:transparent; color:#fff; padding:6px 10px; border-radius:8px; cursor:pointer; }
+#clock{ font-variant-numeric: tabular-nums; color:var(--muted); }
+
+@media (max-width:900px){
+  /* Single-window mode feel: windows use full area */
+  .win{ left:10px !important; right:10px !important; top:10px !important; bottom:54px !important; width:auto !important; height:auto !important; }
+}
+@media (prefers-reduced-motion: reduce){
+  *{ transition:none !important; animation:none !important; }
+}
