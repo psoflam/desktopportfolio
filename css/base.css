@@ -149,3 +149,133 @@ body::after{
 .grip-nw{ top:-3px;  left:-3px;   cursor:nw-resize; }
 .grip-se{ bottom:-3px; right:-3px; cursor:se-resize; }
 .grip-sw{ bottom:-3px; left:-3px;  cursor:sw-resize; }
+
+
+/* Desktop icons grid container */
+#desktop-icons {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;            /* allow clicks to pass unless on icon */
+  padding: 16px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+  grid-auto-rows: 110px;
+  gap: 12px 8px;
+  align-content: start;
+}
+
+/* Each icon */
+.desktop-icon {
+  pointer-events: auto;
+  width: 96px;
+  height: 96px;
+  background: transparent;
+  border: 0;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center; /* centers glyph vertically */
+  color: var(--text-1, #e9ecf1);
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,.25));
+  cursor: default;
+  transition: transform .08s ease, background-color .12s ease, outline-color .12s ease;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+/* use gap for spacing instead */
+.desktop-icon { gap: 4px; }
+
+/* gentle lift */
+.icon-glyph { transform: translateY(-4px); }   /* try -4px to -6px */
+.icon-label { margin-top: 2px; }               /* slightly tighter */
+
+.desktop-icon:hover {
+  background: color-mix(in lab, var(--surface-1, #0b0f17) 70%, transparent);
+}
+
+.desktop-icon:active {
+  transform: translateY(1px) scale(0.99);
+}
+
+.desktop-icon:focus-visible {
+  outline-color: color-mix(in lab, var(--accent, #7cf) 60%, transparent);
+}
+
+/* Glyph circle */
+.icon-glyph {
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  display: grid;
+  place-items: center;
+  font-size: 28px;
+  background:
+    radial-gradient(120% 120% at 30% 20%, color-mix(in lab, var(--accent,#7cf) 25%, transparent), transparent 60%),
+    linear-gradient(180deg, color-mix(in lab, var(--surface-2,#131a27) 90%, var(--accent,#7cf) 10%), var(--surface-2,#131a27));
+  box-shadow:
+    0 6px 14px rgba(0,0,0,.35),
+    inset 0 1px 0 rgba(255,255,255,.06);
+}
+
+/* Label */
+.icon-label {
+  margin-top: 6px;
+  font-size: 12px;
+  line-height: 1.2;
+  text-align: center;
+  color: color-mix(in lab, var(--text-1,#e9ecf1) 88%, #fff 12%);
+  text-shadow: 0 1px 2px rgba(0,0,0,.5);
+  user-select: none;
+  max-width: 90%;
+  word-break: break-word;
+}
+
+/* stack the layers */
+#dot-grid {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+}
+
+#desktop-icons {
+  position: fixed;
+  inset: 0;
+  z-index: 5;
+}
+
+#desktop {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  /* IMPORTANT: let clicks pass through empty areas so icons below are clickable */
+  pointer-events: none;
+}
+
+/* ensure actual windows still receive input */
+#desktop .win,
+#desktop [data-window] {
+  pointer-events: auto;
+}
+
+/* optional: make each icon keyboard-focusable */
+.desktop-icon {
+  /* if you didn’t set it in HTML, this ensures keyboard access */
+  outline: none;
+}
+.desktop-icon:focus-visible {
+  outline: 2px solid var(--accent, #7cf);
+  outline-offset: 2px;
+}
+.icon-glyph {
+  position: relative;           /* keep your existing styles too */
+  display: grid;
+  place-items: center;
+}
+
+.icon-glyph .glyph-inner {
+  display: inline-block;
+  line-height: 1;
+  transform: translateY(-5px);  /* ← nudge just the emoji up */
+  /* tweak: try -3px to -6px to taste */
+}

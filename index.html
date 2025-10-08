@@ -13,12 +13,20 @@
 
   <!-- Desktop surface (windows get appended here) -->
   <div id="desktop" role="application" aria-label="Desktop"></div>
-
+  <!-- Desktop icons -->
+  <div id="desktop-icons" role="list" aria-label="Desktop apps">
+    <button class="desktop-icon" data-app="about" role="listitem" aria-label="Open About">
+      <span class="icon-glyph" aria-hidden="true">
+        <span class="glyph-inner">🪪</span>
+      </span>
+      <span class="icon-label">About</span>
+    </button>
+  </div>
   <!-- Taskbar -->
   <footer id="taskbar" role="toolbar" aria-label="Taskbar">
     <div class="taskbar-left">
       <button class="brand" aria-label="Start">CM</button>
-      <button class="task-btn" data-app="about" aria-controls="about">About</button>
+   
       <!-- We'll add Projects later -->
     </div>
     <div class="taskbar-right">
@@ -67,6 +75,14 @@
     initTaskbar({ wm, apps: {
       about: { title: 'About Me', mount: mountAbout }
     }});
+    import { initDesktopIcons } from './js/desktop-icons.js';
+
+    // Initialize desktop icons and wire to window manager
+    initDesktopIcons({
+      openApp: (id) => {
+        wm.openWindow(id, { title: 'About Me', mount: mountAbout });
+      }
+    });
 
     // Optional: open About on load once
     wm.openWindow('about', { title: 'About Me', mount: mountAbout });
