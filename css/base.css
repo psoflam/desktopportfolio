@@ -52,14 +52,27 @@ body::after{
 .win:focus-within{ box-shadow:0 0 0 2px var(--accent), var(--shadow); }
 
 .win__title{
-  display:flex; align-items:center; gap:10px; padding:10px 12px;
-  border-bottom:1px solid rgba(255,255,255,.08);
+  position: relative;                 /* allows absolute centering of label */
+  display: flex; align-items: center;
+  padding: 10px 12px;
+  border-bottom: 1px solid rgba(255,255,255,.08);
   background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,0));
-  user-select:none; cursor:grab;
-  border-top-left-radius:var(--radius); border-top-right-radius:var(--radius);
+  user-select: none; cursor: grab;
+  border-top-left-radius: var(--radius); border-top-right-radius: var(--radius);
 }
-.win__title:active{ cursor:grabbing; }
-.win__title .controls{ margin-left:auto; display:flex; gap:6px; }
+
+.win__title .controls{
+  position: relative;                 /* stays left in normal flow */
+  display: flex; gap: 8px; align-items: center;
+  margin-right: 10px;                 /* small spacing before the title */
+}
+
+.win__label{
+  position: absolute;                 /* true center independent of controls width */
+  left: 50%; transform: translateX(-50%);
+  margin: 0;
+  font-weight: 700; letter-spacing: .2px;
+}
 .win__title .ctl{
   width:12px; height:12px; border-radius:50%;
   border:1px solid rgba(0,0,0,.25); background:#ff605c; /* close */
@@ -67,7 +80,6 @@ body::after{
 .win__title .ctl.min{ background:#ffbd44; }
 .win__title .ctl.max{ background:#00ca4e; }
 
-.win__label{ font-weight:700; letter-spacing:.2px; }
 
 /* body */
 .win__body{
@@ -105,3 +117,35 @@ body::after{
 @media (prefers-reduced-motion: reduce){
   *{ transition:none !important; animation:none !important; }
 }
+/* full area minus taskbar/padding */
+.win.is-max{
+  left: 10px !important; top: 10px !important;
+  right: 10px !important; bottom: 54px !important;
+  width:auto !important; height:auto !important;
+}
+/* Minimized windows are hidden */
+.win.is-min { display: none; }
+
+/* Maximize fills area (minus taskbar & padding) */
+.win.is-max{
+  left: 10px !important; top: 10px !important;
+  right: 10px !important; bottom: 54px !important;
+  width:auto !important; height:auto !important;
+}
+
+/* Resize grips (8 handles) */
+.grip{ position:absolute; z-index:50; }
+.grip-n, .grip-s{ left:8px; right:8px; height:8px; }
+.grip-e, .grip-w{ top:8px; bottom:8px; width:8px; }
+.grip-n { top:-2px;  cursor:n-resize; }
+.grip-s { bottom:-2px; cursor:s-resize; }
+.grip-e { right:-2px; cursor:e-resize; }
+.grip-w { left:-2px;  cursor:w-resize; }
+
+.grip-ne, .grip-nw, .grip-se, .grip-sw{
+  width:12px; height:12px; z-index:60;
+}
+.grip-ne{ top:-3px;  right:-3px;  cursor:ne-resize; }
+.grip-nw{ top:-3px;  left:-3px;   cursor:nw-resize; }
+.grip-se{ bottom:-3px; right:-3px; cursor:se-resize; }
+.grip-sw{ bottom:-3px; left:-3px;  cursor:sw-resize; }

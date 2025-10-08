@@ -8,11 +8,28 @@ export function initTaskbar({ wm, apps }){
       const app = btn.dataset.app;
       btn.addEventListener('click', () => {
         const meta = apps[app];
-        wm.openWindow(app, { title: meta.title, mount: meta.mount });
-        // mark active visually (basic)
-        bar.querySelectorAll('.task-btn').forEach(b => b.classList.toggle('active', b === btn));
+    
+        // If not open, open
+        if (!wm.isOpen(app)){
+          wm.openWindow(app, { title: meta.title, mount: meta.mount });
+          wm.applySavedBounds(app);
+          btn.classList.add('active');
+          return;
+        }
+    
+        // If open and not minimized, minimize
+        if (!wm.isMinimized(app)){
+          wm.toggleMinimize(app);
+          btn.classList.remove('active');
+          return;
+        }
+    
+        // If minimized, restore/focus
+        wm.toggleMinimize(app); // removes is-min and focuses
+        btn.classList.add('active');
       });
-      // Double-click focuses/opens, same handler is fine
+    
+      // Optional: double-click behaves the same
       btn.addEventListener('dblclick', () => btn.click());
     });
   
